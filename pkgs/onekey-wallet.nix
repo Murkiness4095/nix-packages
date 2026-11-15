@@ -56,13 +56,8 @@
           offlineCache
           ;
 
-        # yarnBerryConfigHook diffs this against the cache's copy.
-        missingHashes = ./onekey-wallet-missing-hashes.json;
-
         nativeBuildInputs = with pkgs; [
           nodejs_22
-          yarn-berry
-          yarn-berry.passthru.yarnBerryConfigHook
           git
           python3
           pkg-config
@@ -86,6 +81,28 @@
 
         preConfigure = ''
           export PATH=$PWD/.git-shim:$PATH
+        '';
+
+        # The lockfile is version 8 (yarn 4.12, shipped in .yarn/releases), so
+        # nixpkgs' berry hook - pinned to yarn 4.18 and lockfile version 10 -
+        # refuses it. Install with the repo's own yarn against the fetcher cache
+        # instead; the cache keys (10c0/...) match this lockfile.
+        preBuild = ''
+          export HOME=$(mktemp -d)
+          export YARN_ENABLE_NETWORK=0
+          export YARN_ENABLE_TELEMETRY=0
+          export npm_config_nodedir=${pkgs.nodejs_22}
+          export npm_config_node_gyp=${pkgs.nodejs_22}/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js
+
+          rm -rf .yarn/cache
+          cp -r ${offlineCache}/cache .yarn/cache
+          chmod -R u+w .yarn/cache
+          if [ -d ${offlineCache}/checkouts ]; then
+            cp -r ${offlineCache}/checkouts .yarn/checkouts
+            chmod -R u+w .yarn/checkouts
+          fi
+
+          node .yarn/releases/yarn-4.12.0.cjs install --immutable --inline-builds
         '';
 
         buildPhase = ''
