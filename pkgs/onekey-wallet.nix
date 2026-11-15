@@ -43,7 +43,7 @@
       offlineCache = yarn-berry.passthru.fetchYarnBerryDeps {
         inherit src;
         missingHashes = ./onekey-wallet-missing-hashes.json;
-        hash = lib.fakeHash;
+        hash = "sha256-xPphY6G/n+8Qdnqr8VkWFDr0ij/dpzXAyUMkG4VpnKw=";
       };
 
       bridgeArch = if pkgs.stdenv.hostPlatform.isAarch64 then "linux-arm64" else "linux-x64";
