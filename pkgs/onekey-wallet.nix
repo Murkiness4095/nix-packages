@@ -38,8 +38,11 @@
 
       # Yarn Berry offline cache for yarn.lock; the hash is reported by the
       # first build that runs with lib.fakeHash.
+      # missing-hashes.json covers the lockfile entries npm published without a
+      # checksum (`yarn-berry-fetcher missing-hashes yarn.lock`).
       offlineCache = yarn-berry.passthru.fetchYarnBerryDeps {
         inherit src;
+        missingHashes = ./onekey-wallet-missing-hashes.json;
         hash = lib.fakeHash;
       };
 
