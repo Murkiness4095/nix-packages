@@ -56,6 +56,9 @@
           offlineCache
           ;
 
+        # yarnBerryConfigHook diffs this against the cache's copy.
+        missingHashes = ./onekey-wallet-missing-hashes.json;
+
         nativeBuildInputs = with pkgs; [
           nodejs_22
           yarn-berry
