@@ -36,6 +36,19 @@
 
       yarn-berry = pkgs.yarn-berry_4;
 
+      # nixpkgs' offline yarn refuses the version 8 lockfile upstream ships
+      # (it is built for version 10) and throws before its own migration runs.
+      # Drop that throw so the same binary migrates the lockfile in place, then
+      # uses the fetcher cache and the checkouts it created for git deps.
+      yarn-offline = pkgs.runCommand "yarn-berry-offline-migrating" { } ''
+        mkdir -p $out/bin
+        cp ${yarn-berry.passthru."yarn-berry-offline"}/bin/yarn $out/bin/yarn
+        chmod u+w $out/bin/yarn
+        substituteInPlace $out/bin/yarn \
+          --replace-fail 'throw new Error(`Tried to use yarn-berry_4.yarnConfigHook' \
+            'void new Error(`Tried to use yarn-berry_4.yarnConfigHook'
+      '';
+
       # Yarn Berry offline cache for yarn.lock; the hash is reported by the
       # first build that runs with lib.fakeHash.
       # missing-hashes.json covers the lockfile entries npm published without a
@@ -73,11 +86,15 @@
 
         # apps/desktop/scripts/build.js stamps `git rev-parse HEAD`, and the
         # release tarball has no .git. Everything else falls through to git.
-        # package.json scripts call `yarn`, so pin it to the repo's release file.
+        # package.json scripts call `yarn`, so pin it to the offline yarn.
         postPatch = ''
           mkdir -p .git-shim
           printf '#!/bin/sh\nif [ "$1" = rev-parse ]; then echo ${rev}; exit 0; fi\nexec ${pkgs.git}/bin/git "$@"\n' > .git-shim/git
-          printf '#!${pkgs.bash}/bin/sh\nexec ${pkgs.nodejs_22}/bin/node %s/.yarn/releases/yarn-4.12.0.cjs "$@"\n' "$PWD" > .git-shim/yarn
+          cat > .git-shim/yarn <<EOF
+          #!${pkgs.bash}/bin/sh
+          export YARN_IGNORE_PATH=1
+          exec ${yarn-offline}/bin/yarn "$@"
+          EOF
           chmod +x .git-shim/git .git-shim/yarn
         '';
 
@@ -85,14 +102,12 @@
           export PATH=$PWD/.git-shim:$PATH
         '';
 
-        # The lockfile is version 8 (yarn 4.12, shipped in .yarn/releases), so
-        # nixpkgs' berry hook - pinned to yarn 4.18 and lockfile version 10 -
-        # refuses it. Install with the repo's own yarn against the fetcher cache
-        # instead; the cache keys (10c0/...) match this lockfile.
         preBuild = ''
           export HOME=$(mktemp -d)
+          export YARN_IGNORE_PATH=1
           export YARN_ENABLE_NETWORK=0
           export YARN_ENABLE_TELEMETRY=0
+          export YARN_ENABLE_GLOBAL_CACHE=false
           export npm_config_nodedir=${pkgs.nodejs_22}
           export npm_config_node_gyp=${pkgs.nodejs_22}/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js
 
@@ -104,7 +119,9 @@
             chmod -R u+w .yarn/checkouts
           fi
 
-          node .yarn/releases/yarn-4.12.0.cjs install --immutable --inline-builds
+          # No --immutable: the first run migrates yarn.lock from version 8 to
+          # 10, and the cache keys (10c0/...) already match.
+          yarn install --inline-builds
         '';
 
         buildPhase = ''
