@@ -43,6 +43,7 @@
 
       imports = [
         inputs.treefmt-nix.flakeModule
+        ./pkgs/onekey-wallet.nix
         ./pkgs/omp-gui.nix
         ./pkgs/tern.nix
       ];
