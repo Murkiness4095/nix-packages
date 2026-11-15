@@ -73,10 +73,12 @@
 
         # apps/desktop/scripts/build.js stamps `git rev-parse HEAD`, and the
         # release tarball has no .git. Everything else falls through to git.
+        # package.json scripts call `yarn`, so pin it to the repo's release file.
         postPatch = ''
           mkdir -p .git-shim
           printf '#!/bin/sh\nif [ "$1" = rev-parse ]; then echo ${rev}; exit 0; fi\nexec ${pkgs.git}/bin/git "$@"\n' > .git-shim/git
-          chmod +x .git-shim/git
+          printf '#!${pkgs.bash}/bin/sh\nexec ${pkgs.nodejs_22}/bin/node %s/.yarn/releases/yarn-4.12.0.cjs "$@"\n' "$PWD" > .git-shim/yarn
+          chmod +x .git-shim/git .git-shim/yarn
         '';
 
         preConfigure = ''
