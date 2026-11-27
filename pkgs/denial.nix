@@ -130,6 +130,11 @@ in
           '';
 
           dontStrip = true;
+          dontPatchELF = true;
+          dontAutoPatchelf = true;
+          postFixup = ''
+            autoPatchelf "$out/lib/denial" "$out/lib/denial-apps"
+          '';
           doInstallCheck = true;
           installCheckPhase = ''
             runHook preInstallCheck
