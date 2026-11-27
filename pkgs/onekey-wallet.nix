@@ -88,6 +88,11 @@
         # release tarball has no .git. Everything else falls through to git.
         # package.json scripts call `yarn`, so pin it to the offline yarn.
         postPatch = ''
+          # A Git dependency requests the exact version already selected by
+          # the root lock. Record that descriptor for offline resolution.
+          substituteInPlace yarn.lock \
+            --replace-fail '"@keystonehq/keystone-sdk@npm:^0.4.1":' \
+              '"@keystonehq/keystone-sdk@npm:0.4.1, @keystonehq/keystone-sdk@npm:^0.4.1":'
           mkdir -p .git-shim
           printf '#!/bin/sh\nif [ "$1" = rev-parse ]; then echo ${rev}; exit 0; fi\nexec ${pkgs.git}/bin/git "$@"\n' > .git-shim/git
           cat > .git-shim/yarn <<'EOF'
