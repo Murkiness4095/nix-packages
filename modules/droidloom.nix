@@ -44,6 +44,7 @@
         systemd.services.droidloomd.serviceConfig.IPAccounting = false;
 
         security.polkit.enable = true;
+        security.polkit.enablePkexecWrapper = true;
         security.polkit.extraConfig = ''
           polkit.addRule(function(action, subject) {
             if (action.id === "org.freedesktop.systemd1.manage-units" &&
