@@ -90,7 +90,7 @@
         postPatch = ''
           mkdir -p .git-shim
           printf '#!/bin/sh\nif [ "$1" = rev-parse ]; then echo ${rev}; exit 0; fi\nexec ${pkgs.git}/bin/git "$@"\n' > .git-shim/git
-          cat > .git-shim/yarn <<EOF
+          cat > .git-shim/yarn <<'EOF'
           #!${pkgs.bash}/bin/sh
           export YARN_IGNORE_PATH=1
           exec ${yarn-offline}/bin/yarn "$@"
