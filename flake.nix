@@ -9,6 +9,10 @@
   };
 
   inputs = {
+    denial-source = {
+      url = "github:denialwm/denial/v0.6.10";
+      flake = false;
+    };
     flake-compat.url = "https://git.lix.systems/lix-project/flake-compat/archive/main.tar.gz";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
@@ -41,6 +45,7 @@
 
       imports = [
         inputs.treefmt-nix.flakeModule
+        ./pkgs/denial.nix
         ./pkgs/onekey-wallet.nix
         ./pkgs/omp-gui.nix
         ./pkgs/tern.nix

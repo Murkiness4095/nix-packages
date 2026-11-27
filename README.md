@@ -37,3 +37,19 @@ Tern's upstream artifact requires an authenticated Stencil session. The public
 workflow excludes it. For a local build, download the exact artifact listed in
 `pkgs/tern.nix` through your authenticated session and seed the fixed-output
 store path with `nix store add --mode flat ./<artifact-name>` before building.
+
+## Denial
+
+Import the same module on x86-64 and ARM64 NixOS:
+
+```nix
+{
+  imports = [ inputs.nix-packages.nixosModules.denial ];
+  programs.denial.enable = true;
+}
+```
+
+CI builds the Rust compositor and its native helpers from the pinned source.
+The package uses the matching upstream Flutter shell, engine, and Settings
+bundles. Device-specific kernel, graphics and input settings belong in the
+host configuration.

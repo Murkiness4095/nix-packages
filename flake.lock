@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "denial-source": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1795658515,
+        "narHash": "sha256-F4L8OlLd3THs5tLJsAG6COJETUCQuwQCzCrVCDrsi/o=",
+        "owner": "denialwm",
+        "repo": "denial",
+        "rev": "9bb2c22a5a191f8c90f47fd4d7907c0f425a6ebf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "denialwm",
+        "ref": "v0.6.10",
+        "repo": "denial",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "locked": {
         "lastModified": 1777699697,
@@ -109,6 +126,7 @@
     },
     "root": {
       "inputs": {
+        "denial-source": "denial-source",
         "flake-compat": "flake-compat",
         "flake-parts": "flake-parts",
         "nix-github-actions": "nix-github-actions",
