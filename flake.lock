@@ -17,6 +17,23 @@
         "type": "github"
       }
     },
+    "droidloom-source": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1795717356,
+        "narHash": "sha256-zXoll31dJW0qBEZiF1tmX3SA3tqeKpD2I9fbuNUv2sc=",
+        "owner": "denialwm",
+        "repo": "droidloom",
+        "rev": "4df8af92c2add42f14ed6a2c8e1291ce90bf0255",
+        "type": "github"
+      },
+      "original": {
+        "owner": "denialwm",
+        "repo": "droidloom",
+        "rev": "4df8af92c2add42f14ed6a2c8e1291ce90bf0255",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "locked": {
         "lastModified": 1777699697,
@@ -127,6 +144,7 @@
     "root": {
       "inputs": {
         "denial-source": "denial-source",
+        "droidloom-source": "droidloom-source",
         "flake-compat": "flake-compat",
         "flake-parts": "flake-parts",
         "nix-github-actions": "nix-github-actions",

@@ -9,6 +9,10 @@
   };
 
   inputs = {
+    droidloom-source = {
+      url = "github:denialwm/droidloom/4df8af92c2add42f14ed6a2c8e1291ce90bf0255";
+      flake = false;
+    };
     denial-source = {
       url = "github:denialwm/denial/v0.6.10";
       flake = false;
@@ -46,7 +50,9 @@
       imports = [
         inputs.treefmt-nix.flakeModule
         ./modules/denial.nix
+        ./modules/droidloom.nix
         ./pkgs/denial.nix
+        ./pkgs/droidloom.nix
         ./pkgs/onekey-wallet.nix
         ./pkgs/omp-gui.nix
         ./pkgs/tern.nix

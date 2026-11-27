@@ -53,3 +53,25 @@ CI builds the Rust compositor and its native helpers from the pinned source.
 The package uses the matching upstream Flutter shell, engine, and Settings
 bundles. Device-specific kernel, graphics and input settings belong in the
 host configuration.
+
+## Droidloom
+
+The independent NixOS module supports x86-64 and ARM64. It can be imported
+alongside the Denial module or used with another compatible Wayland compositor.
+
+```nix
+{
+  imports = [ inputs.nix-packages.nixosModules.droidloom ];
+  virtualisation.droidloom = {
+    enable = true;
+    user = "your-desktop-user";
+  };
+}
+```
+
+CI builds the host Rust programs using a pinned source revision and packages
+them with the matching, hash-pinned upstream Android release. The host kernel
+must provide Binder and binderfs. After activating the module, run
+`droidloomctl start` as the configured desktop user in the Wayland session and
+approve the first-time administration prompt. Use `droidloom-doctor` to check
+the host before launching Android apps.
