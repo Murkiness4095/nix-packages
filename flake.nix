@@ -45,6 +45,7 @@
 
       imports = [
         inputs.treefmt-nix.flakeModule
+        ./modules/denial.nix
         ./pkgs/denial.nix
         ./pkgs/onekey-wallet.nix
         ./pkgs/omp-gui.nix
