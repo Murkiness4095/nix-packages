@@ -1,15 +1,14 @@
 {
   description = "Nix packages repository";
 
+  nixConfig = {
+    extra-substituters = [ "https://nix-packages.cachix.org" ];
+    extra-trusted-public-keys = [
+      "nix-packages.cachix.org-1:Mx8MBa+WI8CVVfbGr2MArBvR6ZYkiuoRjmuwMR5nkAk="
+    ];
+  };
+
   inputs = {
-    # Netscape cookie file for .stencil.so (store copy), needed to download
-    # tern. Regenerate when the session expires:
-    #   nix store add --mode flat --name stencil-cookie .stencil-cookie
-    # then paste the printed store path here and rerun `nix flake lock`.
-    stencilCookie = {
-      url = "path:/nix/store/75kn2mrhwpmdvzs46irk2lkrgbbd7zji-stencil-cookie";
-      flake = false;
-    };
     flake-compat.url = "https://git.lix.systems/lix-project/flake-compat/archive/main.tar.gz";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
@@ -37,7 +36,6 @@
       systems = [
         "x86_64-linux"
         "aarch64-linux"
-        "x86_64-darwin"
         "aarch64-darwin"
       ];
 

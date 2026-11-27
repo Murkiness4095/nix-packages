@@ -114,21 +114,7 @@
         "nix-github-actions": "nix-github-actions",
         "nixpkgs": "nixpkgs",
         "nvfetcher": "nvfetcher",
-        "stencilCookie": "stencilCookie",
         "treefmt-nix": "treefmt-nix"
-      }
-    },
-    "stencilCookie": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1,
-        "narHash": "sha256-KigEM+Vwwoa84B3nGmlx+YXtCBrNzhIg3z32AposzC4=",
-        "path": "/nix/store/75kn2mrhwpmdvzs46irk2lkrgbbd7zji-stencil-cookie",
-        "type": "path"
-      },
-      "original": {
-        "path": "/nix/store/75kn2mrhwpmdvzs46irk2lkrgbbd7zji-stencil-cookie",
-        "type": "path"
       }
     },
     "systems": {

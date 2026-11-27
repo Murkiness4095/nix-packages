@@ -17,15 +17,6 @@
       pname = "tern";
       baseUrl = "https://build.stencil.so/d/tern/${buildId}";
 
-      # `.stencil-cookie` is gitignored, so it comes in as the optional
-      # `stencilCookie` flake input (a store copy). Without it the download
-      # hits the login page and the fixed-output hash check fails. Regenerate
-      # when the session cookie changes:
-      #   nix store add --mode flat --name stencil-cookie .stencil-cookie
-      # then add the input to flake.nix.
-      cookieFile = inputs.stencilCookie or null;
-      curlOpts = lib.optionalString (cookieFile != null) "-b ${cookieFile}";
-
       assets = {
         x86_64-linux = {
           asset = "Tern-${version}-linux-x86_64.tar.gz";
@@ -53,7 +44,6 @@
         url = "${baseUrl}/${assets.${system}.asset}";
         sha256 = assets.${system}.sha256;
         name = assets.${system}.asset;
-        inherit curlOpts;
       };
 
       linuxPackage = pkgs.stdenv.mkDerivation {
